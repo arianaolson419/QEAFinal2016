@@ -1,4 +1,4 @@
-% QEA FINAL RUSSIAN WEATHER SATELLITE! 
+% QEA FINAL RUSSIAN WEATHER SATELLITE! %
 Zi = input1; %will get this value from the USRP
 Zq = input2; %will get this value from the USRP
 Kp = onething;
@@ -28,7 +28,5 @@ for k = 2:length(Ztotal)
     phi(k) = Kp*phi(k) + Ki*(phi(k) + phi(k-1)) + Kd*(phi(k) - phi(k-1)); 
 end
 
-bits = Ztotal.*exp(1i*phi); 
-firstBits = sign(real(bits));
-secondBits = sign(imag(bits)); 
+
 
