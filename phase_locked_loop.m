@@ -24,8 +24,8 @@ for k = 2:length(Ztotal)
     realPart = realPart*signImag;
     imagPart = imagPart*signReal; 
 
-    phi(k) = realPart - imagPart; 
-    phi(k) = Kp*phi(k) + Ki*(phi(k) + phi(k-1)) + Kd*(phi(k) - phi(k-1)); 
+    phi(k) = wrapTo2Pi(realPart - imagPart); 
+    phi(k) = wrapTo2Pi(Kp*phi(k) + Ki*(wrapTo2Pi(sum(phi))) + Kd*(wrapTo2Pi(phi(k) - phi(k-1)))); 
 end
 
 bits = Ztotal.*exp(1i*phi); 
