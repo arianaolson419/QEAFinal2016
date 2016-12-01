@@ -1,32 +1,35 @@
-% QEA FINAL RUSSIAN WEATHER SATELLITE! %
-Zi = input1; %will get this value from the USRP
-Zq = input2; %will get this value from the USRP
-Kp = onething;
-Ki = something;
-Kd = somethingelse; 
+function y = phase_locked_loop(Ztotal, Kp, Ki, Kd)
 
-Zq = 1i*Zq; 
+% QEA FINAL RUSSIAN WEATHER SATELLITE! 
+% Zi = input1; %will get this value from the USRP
+% Zq = input2; %will get this value from the USRP 
+% 
+% Zq = 1i*Zq; 
 
-Ztotal = Zi + Zq; %this is a complex number Zi + iZq
-phi = zeros(1, length(Ztotal)); 
+% Ztotal = Zi + Zq; %this is a complex number Zi + iZq
+phi = zeros(size(Ztotal)); 
+y = zeros(size(Ztotal)); 
 
 phi(1) = 0; %initial guess
 
 for k = 2:length(Ztotal) 
-    y = Ztotal*exp(1i*phi(k-1)); 
+    y(k) = Ztotal(k)*exp(-1i*phi(k-1)); 
 
-    realPart = real(y); 
-    imagPart = imag(y);
+    realPart = real(y(k)); 
+    imagPart = imag(y(k));
 
     signReal = sign(realPart);
     signImag = sign(imagPart); 
 
-    realPart = realPart*signImag;
-    imagPart = imagPart*signReal; 
+    realPart = signImag*realPart;
+    imagPart = signReal*imagPart; 
 
-    phi(k) = realPart - imagPart; 
-    phi(k) = Kp*phi(k) + Ki*(phi(k) + phi(k-1)) + Kd*(phi(k) - phi(k-1)); 
+    phi = -1*(realPart - imagPart)/2; 
+    phi = Kp*phi(k) + Ki*(sum(phi)) + Kd*phi(k) - phi(k-1); 
 end
 
-
+% bits = Ztotal.*exp(1i*phi); 
+% firstBits = sign(real(bits));
+% secondBits = sign(imag(bits)); 
+end
 
