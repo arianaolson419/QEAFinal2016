@@ -13,7 +13,7 @@ ph = phase_noise_ampl*randn(size(x))+freq_error*[1:1:length(x)]' + rand(1)*2*pi;
 
 % apply phase offsets and add some noise
 % y = x.*exp(j*ph) + 1e-2*(randn(size(x)) + j*randn(size(x)));
-y = D(300000: 300000+10000);
+% y = double(y)
 
 % run the control loop
 % 
@@ -24,7 +24,8 @@ y = D(300000: 300000+10000);
 % and see the expected behavior in the signal - e.g. increasing
 % integral term reduces steady state error but increases noisyness
 
-v_h = phase_locked_loop(y, 20, 3, 10); %original
+y = decimate(y0(8:end), 8);
+v_h = phase_locked_loop(y, 0.4, 0.7, 0.01); %original
 %for validation subplots
 % x_h = phase_locked_loop(y, 0.6, 0.7, 0.01);
 % y_h = phase_locked_loop(y, 0.4, 0.1, 0.01);
@@ -64,21 +65,25 @@ v_h = phase_locked_loop(y, 20, 3, 10); %original
 % legend('Timing sync-ed');
 % 
 x = zeros(floor(length(y)/10), 1);
-for i=1:length(x)
-    x(i) = y(i*10);
-end
-Y = fft(y);
+% for i=1:length(x)
+%     x(i) = y(i*10);
+% end
 subplot(3, 1, 1)
-plot(real(x))
+plot(real(y))
+title('real')
 subplot(3, 1, 2)
-plot(imag(x))
+plot(imag(y))
+title('imaginary')
 subplot(3, 1, 3)
-
+plot(linspace(-137.9e6/2, 137.9e6/2, length(y)), fftshift(abs(fft(y)))/length(y))
+title('fft of y')
 figure
+
+
 % plot the results
 plot(real(y), imag(y), '.');
 hold on
-plot(real(v_h), imag(v_h), 'rx');
+plot(real(v_h), imag(v_h), 'x');
 set(gca,'fontsize',16)
 xlabel('I')
 ylabel('Q')

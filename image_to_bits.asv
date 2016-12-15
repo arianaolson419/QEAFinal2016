@@ -1,0 +1,4 @@
+pic = imread('earth.png');
+B = zeros(3*size(pic, 1) * size(pic, 2),1);
+
+B(
